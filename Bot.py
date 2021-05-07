@@ -7,7 +7,8 @@ import os
 print("Connecting...")
 
 commandPrefix = "$"
-bot = commands.Bot(command_prefix=commandPrefix)
+intents = discord.Intents(guild_messages=True, guilds=True, members=True, messages=True)
+bot = commands.Bot(command_prefix=commandPrefix, intents=intents)
 bot.RED = 0xff0000
 bot.GREEN = 0x00ff00
 bot.YELLOW = 0xffff00
