@@ -94,7 +94,7 @@ class Shuffle(commands.Cog):
 		server = self.bot.get_guild(int(server.id))
 		roles = server.roles
 		for role in roles:
-			if str(role.id) in config["ignoreRoles"]:
+			if str(role.id) in config["ignoreRoles"] or str(role.id) == config["adminRole"]:
 				continue
 			if role.permissions != standardPermissions:
 				await role.edit(permissions=standardPermissions, reason="Permissions reset at end of admin swap.")
