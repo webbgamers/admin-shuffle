@@ -15,8 +15,8 @@ WORKDIR /admin-shuffle
 COPY . /admin-shuffle
 
 # Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
-RUN useradd admin-shuffler && chown -R admin-shuffler /admin-shuffle
-USER admin-shuffler
+#RUN useradd admin-shuffler && chown -R admin-shuffler /admin-shuffle
+#USER admin-shuffler
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["python", "Bot.py"]

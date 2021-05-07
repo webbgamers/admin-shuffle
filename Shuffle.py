@@ -105,7 +105,7 @@ class Shuffle(commands.Cog):
 		try:
 			config = self._configs[id]
 			return config
-		except IndexError:
+		except KeyError:
 			# Attempt to load config from file 
 			try:
 				config = self._loadConfig("{}.json".format(id))
