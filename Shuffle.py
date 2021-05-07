@@ -42,12 +42,18 @@ class Shuffle(commands.Cog):
 	async def _updateLoop(self):
 		while True:
 			try:
+				# Extract all configs for enabled servers
 				enabledConfigs = []
 				for config in self._configs:
 					config = self._configs[config]
 					if config["enabled"]:
 						enabledConfigs.append(config)
 				for config in enabledConfigs:
+					# Warn current admins if there is less than an hour left
+					if config["nextSwap"] - time.time() <= 3600 and not config["warned"]:
+						server = self.bot.get_guild(int(config["id"]))
+						await self.warnAdmins(server)
+					# Swap admins if time is up
 					if time.time() > config["nextSwap"]:
 						server = self.bot.get_guild(int(config["id"]))
 						await self.swapAdmins(server)
@@ -56,14 +62,22 @@ class Shuffle(commands.Cog):
 			except:
 				print('Ignoring exception in shuffle update loop:', file=sys.stderr)
 				traceback.print_exc()
-			await asyncio.sleep(5)
+			await asyncio.sleep(10)
 
+	async def warnAdmins(self, server):
+		config = self.getConfig(server)
+		adminRole = server.get_role(int(config["adminRole"]))
+		members = server.members
+		for member in members:
+			if adminRole in member.roles:
+				await member.send("You have less than one hour remaining of time as admin, time is ticking!")
+		self.setConfigValue(server, "warned", True)
 
 	async def swapAdmins(self, server):
 		print("Swapping admins on {}!".format(server.id))
 		config = self.getConfig(server)
 		await self.stripRoles(server)
-		adminRole = server.get_role(int(config["adminRole"]))	
+		adminRole = server.get_role(int(config["adminRole"]))
 		members = server.members
 		potentialAdmins = []
 		for member in members:
@@ -147,19 +161,19 @@ class Shuffle(commands.Cog):
 
 	@isGuildOwner()
 	@commands.command()
-	async def setmin(self, ctx, minimum):
+	async def setmin(self, ctx, minimum:int):
 		self.setConfigValue(ctx.guild, "minAdmins", minimum)
 		await ctx.send("Minimum admin number is now {}. With these settings there will be {} admins next swap.".format(minimum, self.getAdminCount(ctx.guild)))
 
 	@isGuildOwner()
 	@commands.command()
-	async def setmax(self, ctx, maximum):
+	async def setmax(self, ctx, maximum:int):
 		self.setConfigValue(ctx.guild, "maxAdmins", maximum)
 		await ctx.send("Maximum admin number is now {}. With these settings there will be {} admins next swap.".format(maximum, self.getAdminCount(ctx.guild)))
 
 	@isGuildOwner()
 	@commands.command()
-	async def setratio(self, ctx, ratio):
+	async def setratio(self, ctx, ratio:int):
 		self.setConfigValue(ctx.guild, "adminRatio", ratio)
 		await ctx.send("The admin-member ratio is now 1:{}. With these settings there will be {} admins next swap.".format(ratio, self.getAdminCount(ctx.guild)))
 
@@ -199,3 +213,36 @@ class Shuffle(commands.Cog):
 		config["ignoreRoles"].remove(str(role.id))
 		self.setConfigValue(ctx.guild, "ignoreRoles", config["ignoreRoles"])
 		await ctx.send("{} has been removed from the ignore list.".format(role.mention))
+
+	@isGuildOwner()
+	@commands.command()
+	async def setstr(self, ctx, key:str, value:str):
+		self.setConfigValue(ctx.guild, key, value)
+		await ctx.send("Set {} to {} in config. It is not reccomended to use this command unless necessary.".format(key, value))
+
+	@isGuildOwner()
+	@commands.command()
+	async def setbool(self, ctx, key:str, value:bool):
+		self.setConfigValue(ctx.guild, key, value)
+		await ctx.send("Set {} to {} in config. It is not reccomended to use this command unless necessary.".format(key, value))
+
+	@isGuildOwner()
+	@commands.command()
+	async def setint(self, ctx, key:str, value:int):
+		self.setConfigValue(ctx.guild, key, value)
+		await ctx.send("Set {} to {} in config. It is not reccomended to use this command unless necessary.".format(key, value))
+
+	@isGuildOwner()
+	@commands.command()
+	async def reloadconf(self, ctx):
+		self._loadConfigs()
+		await ctx.send("Reloaded configs!")
+
+	# Info commands
+	@commands.command()
+	async def timeleft(self, ctx):
+		config = self.getConfig(ctx.guild)
+		timeUntilSwap = config["nextSwap"] - time.time()
+		hours = int(timeUntilSwap / 3600)
+		minutes = int(timeUntilSwap % 3600 / 60)
+		await ctx.send("The next swap will occur in {} hours and {} minutes.".format(hours, minutes))
