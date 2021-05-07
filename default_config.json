@@ -1,0 +1,11 @@
+{
+	"id": null,
+	"enabled": false,
+	"minAdmins": 2,
+	"maxAdmins": 5,
+	"adminRatio": 150,
+	"adminRole": null,
+	"swapTime": 48,
+	"nextSwap": 0,
+	"ignoreRoles": []
+}
