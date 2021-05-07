@@ -165,7 +165,7 @@ class Shuffle(commands.Cog):
 
 	@isGuildOwner()
 	@commands.command()
-	async def setrole(self, ctx, role:discord.Role):
+	async def setadmin(self, ctx, role:discord.Role):
 		self.setConfigValue(ctx.guild, "adminRole", str(role.id))
 		await ctx.send("The admin role is now {}. These settings will be applied next swap.".format(role.mention))
 
