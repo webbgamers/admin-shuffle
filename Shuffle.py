@@ -57,8 +57,6 @@ class Shuffle(commands.Cog):
 					if time.time() > config["nextSwap"]:
 						server = self.bot.get_guild(int(config["id"]))
 						await self.swapAdmins(server)
-						nextSwap = time.time() + (int(config["swapTime"])*86400)
-						self.setConfigValue(server, "nextSwap", nextSwap)
 			except:
 				print('Ignoring exception in shuffle update loop:', file=sys.stderr)
 				traceback.print_exc()
@@ -76,15 +74,17 @@ class Shuffle(commands.Cog):
 	async def swapAdmins(self, server):
 		print("Swapping admins on {}!".format(server.id))
 		config = self.getConfig(server)
+		# Remove extra permissions from roles
 		await self.stripRoles(server)
 		adminRole = server.get_role(int(config["adminRole"]))
 		members = server.members
 		potentialAdmins = []
+		# Remove current admin and get list of potential admins
 		for member in members:
 			roleIds = []
 			for role in member.roles:
 				roleIds.append(str(role.id))
-				# Ignore members with role in ignore list or who are bots
+			# Ignore members with role in ignore list or who are bots
 			if any(role in roleIds for role in config["ignoreRoles"]) or member.bot:
 				continue
 			if adminRole in member.roles:
@@ -92,11 +92,17 @@ class Shuffle(commands.Cog):
 				await member.send("Unfortunately your time as admin has ended. Your chances of getting admin again are the same so be ready!")
 			potentialAdmins.append(member)
 		adminCount = self.getAdminCount(server)
+		# Select and apply new admins
 		newAdmins = random.sample(potentialAdmins, adminCount)
 		for newAdmin in newAdmins:
 			await newAdmin.add_roles(adminRole, reason="Admin swap choice!")
 			config = self.getConfig(server)
 			await newAdmin.send("You were randomly selected to be the next admin! You have {} hours, make it count!".format(config["swapTime"]))
+		# Reset swap time
+		nextSwap = time.time() + (int(config["swapTime"])*86400)
+		self.setConfigValue(server, "nextSwap", nextSwap)
+		# Reset warned flag
+		self.setConfigValue(server, "warned", False)
 
 	def getAdminCount(self, server):
 		config = self._configs[str(server.id)]
@@ -234,9 +240,20 @@ class Shuffle(commands.Cog):
 
 	@isGuildOwner()
 	@commands.command()
+	async def getval(self, ctx, key:str):
+		config = self.getConfig(ctx.guild)
+		await ctx.send("Value for {} is {} in config.".format(config[key]))
+
+	@isGuildOwner()
+	@commands.command()
 	async def reloadconf(self, ctx):
 		self._loadConfigs()
 		await ctx.send("Reloaded configs!")
+
+	@isGuildOwner()
+	@commands.command()
+	async def swap(self, ctx):
+		self.swapAdmins(ctx.guild)
 
 	# Info commands
 	@commands.command()
