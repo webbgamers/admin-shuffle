@@ -99,7 +99,7 @@ class Shuffle(commands.Cog):
 			config = self.getConfig(server)
 			await newAdmin.send("You were randomly selected to be the next admin! You have {} hours, make it count!".format(config["swapTime"]))
 		# Reset swap time
-		nextSwap = time.time() + (int(config["swapTime"])*86400)
+		nextSwap = time.time() + (int(config["swapTime"])*3600)
 		self.setConfigValue(server, "nextSwap", nextSwap)
 		# Reset warned flag
 		self.setConfigValue(server, "warned", False)
@@ -242,7 +242,7 @@ class Shuffle(commands.Cog):
 	@commands.command()
 	async def getval(self, ctx, key:str):
 		config = self.getConfig(ctx.guild)
-		await ctx.send("Value for {} is {} in config.".format(config[key]))
+		await ctx.send("Value for {} is {} in config.".format(key, config[key]))
 
 	@isGuildOwner()
 	@commands.command()
@@ -253,7 +253,7 @@ class Shuffle(commands.Cog):
 	@isGuildOwner()
 	@commands.command()
 	async def swap(self, ctx):
-		self.swapAdmins(ctx.guild)
+		await self.swapAdmins(ctx.guild)
 
 	# Info commands
 	@commands.command()
