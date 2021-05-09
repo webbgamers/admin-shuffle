@@ -166,6 +166,7 @@ class Shuffle(commands.Cog):
 		await self._updateLoop()
 
 	# Config commands
+	# Enable/disable swapping
 	@isGuildOwner()
 	@commands.command()
 	async def toggle(self, ctx):
@@ -279,6 +280,7 @@ class Shuffle(commands.Cog):
 		await self.swapAdmins(ctx.guild)
 
 	# Info commands
+	# Get time remaining on current swap
 	@commands.command()
 	async def timeleft(self, ctx):
 		config = self.getConfig(ctx.guild)
@@ -286,3 +288,31 @@ class Shuffle(commands.Cog):
 		hours = int(timeUntilSwap / 3600)
 		minutes = int(timeUntilSwap % 3600 / 60)
 		await ctx.send("The next swap will occur in {} hours and {} minutes.".format(hours, minutes))
+
+	# Help command
+	@commands.command()
+	async def help(self, ctx):
+		isOwner = ctx.guild.owner_id == ctx.author.id
+		embed = discord.Embed(title="Admin Swap Help", description="Basic usage is `$command`.", color=0x7289da)
+		embed.add_field(name="General Commands", value="`ping` - Tests the latency between the bot and discord.\n" + 
+        "`timeleft` - Get the time until the next swap.\n" +
+		"`help` - How to use this bot.", inline=False)
+		if isOwner:
+			embed.add_field(name="Config Commands", value="`toggle` - Enable/disable admin swapping.\n" + 
+        	"`setmin <minimum>` - Set the minimum number of admins.\n" +
+			"`setmax <maximum>` - Set the maximum number of admins.\n" +
+			"`setratio <members per admin>` - Set the member-admin ratio.\n" +
+			"`setadmin <role>` - Set the role to use as the admin role.\n" +
+			"`settime <hours>` - Set the time between swaps.\n" +
+			"`ignore <role>` - Add a role to the list of ignored roles.\n" +
+			"`unignore <role>` - Remove a role from the list of ignored roles.\n" +
+			"`ignoredroles` - Get the list of ignored roles.", inline=False)
+		await ctx.send(embed=embed)
+
+	# Ping command
+	@commands.command()
+	async def ping(self, ctx):
+		before = time.monotonic()
+		message = await ctx.send("Pinging...")
+		ping = round((time.monotonic() - before) * 1000, 1)
+		await message.edit(content=":ping_pong: **Pong!**\nLatency: {}\nAPI Latency: {}".format(ping, round(self.bot.latency * 1000, 1)))
