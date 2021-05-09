@@ -90,9 +90,11 @@ class Shuffle(commands.Cog):
 			# Ignore members with role in ignore list or who are bots
 			if any(role in roleIds for role in config["ignoreRoles"]) or member.bot:
 				continue
+			# Remove admin from members and prevent someone from getting it twice in a row
 			if adminRole in member.roles:
 				await member.remove_roles(adminRole, reason="End of admin time.")
-				await member.send("Unfortunately your time as admin has ended. Your chances of getting admin again are the same so be ready!")
+				await member.send("Unfortunately your time as admin has ended. Your can't get admin twice in a row but after that you are fair game so be ready!")
+				continue
 			potentialAdmins.append(member)
 		adminCount = self.getAdminCount(server)
 		# Select and apply new admins
