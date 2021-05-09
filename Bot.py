@@ -1,8 +1,6 @@
 from discord.ext import commands
 import discord
-import time
 from Shuffle import Shuffle
-import os
 
 print("Connecting...")
 
