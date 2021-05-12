@@ -5,8 +5,8 @@ This is a Discord bot that will periodically rotate who is admin. After a config
 There is a server that this bot runs on [here](https://discord.gg/KsKQWgtgRG). This invite link may break if someone gets admin and deletes it, theres not much I can do about that.
 
 ## Official Hosted Bot
-For whatever reason if you want to run your own experiment you can invite the [official hosted bot](https://discord.com/oauth2/authorize?client_id=839562104696602644&scope=bot&permissions=8589934579). Once you have invited it, see the setup instructions for how to get it running.
-It should be running mostly 24/7 but I cannot guarantee that.
+For whatever reason if you want to run your own experiment you can invite the [official hosted bot](https://discord.com/oauth2/authorize?client_id=839562104696602644&scope=bot&permissions=8589934579). Once you have invited it, see the [setup instructions](#bot-setup) for how to get it running.
+The hosted bot should be running 24/7 but I cannot guarantee that.
 
 ## Self Hosting with Docker (Reccomended)
 Running using Docker is extremely easy and only requires Docker to be installed. If you don't know what Docker is, check out [their website](https://www.docker.com/).
@@ -43,5 +43,5 @@ Docker is not required to run the bot, it just makes things easier and more secu
 * Once you have added the bot to your server, you should move its role higher than the role you will use for the admins.
 * Tell the bot about the admin role by sending `$setadmin <role>` where `<role>` is the role name, mention, or ID.
 * Set any roles you would not like to be reset at the end of each cycle with `$ignore <role>` where `<role>` is the role name, mention, or ID. You can remove roles with the `$unignore <role>` command and check the current ignored roles with `$ignoredroles`.
-* Tweak the settings how you like with `$setmin <minimum admins>`, `$setmax <maximum admins>`, `$setratio <members per admin>`, and `$settime <hours between swaps>`.
+* Tweak the settings how you like with `$setmin <minimum admins>`, `$setmax <maximum admins>`, `$setratio <members per admin>`, and `$settime <hours between swaps>`. For more information on each command, use the `$help` command.
 * Once everything is setup, run `$toggle` to enable the swapping. Members will be messaged when they are selected, recieve a warning when there is 1 hour left, and a message when their time is up.
