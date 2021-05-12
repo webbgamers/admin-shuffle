@@ -309,7 +309,8 @@ class Shuffle(commands.Cog):
 			"`settime <hours>` - Set the time between swaps.\n" +
 			"`ignore <role>` - Add a role to the list of ignored roles.\n" +
 			"`unignore <role>` - Remove a role from the list of ignored roles.\n" +
-			"`ignoredroles` - Get the list of ignored roles.", inline=False)
+			"`ignoredroles` - Get the list of ignored roles." +
+			"`swap` - Manually initiate a swap.", inline=False)
 		await ctx.send(embed=embed)
 
 	# Ping command
