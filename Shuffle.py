@@ -7,13 +7,14 @@ import time
 import random
 import traceback
 import sys
+import ast
 
 
 # Check to test if invoker is guild owner
 def isGuildOwner():
-    def predicate(ctx):
-        return ctx.guild is not None and ctx.guild.owner_id == ctx.author.id
-    return commands.check(predicate)
+	def predicate(ctx):
+		return ctx.guild is not None and ctx.guild.owner_id == ctx.author.id
+	return commands.check(predicate)
 
 
 class Shuffle(commands.Cog):
@@ -297,11 +298,11 @@ class Shuffle(commands.Cog):
 		isOwner = ctx.guild.owner_id == ctx.author.id
 		embed = discord.Embed(title="Admin Swap Help", description="Basic usage is `$command`.", color=0x7289da)
 		embed.add_field(name="General Commands", value="`ping` - Tests the latency between the bot and discord.\n" + 
-        "`timeleft` - Get the time until the next swap.\n" +
+		"`timeleft` - Get the time until the next swap.\n" +
 		"`help` - How to use this bot.", inline=False)
 		if isOwner:
 			embed.add_field(name="Config Commands", value="`toggle` - Enable/disable admin swapping.\n" + 
-        	"`setmin <minimum>` - Set the minimum number of admins.\n" +
+			"`setmin <minimum>` - Set the minimum number of admins.\n" +
 			"`setmax <maximum>` - Set the maximum number of admins.\n" +
 			"`setratio <members per admin>` - Set the member-admin ratio.\n" +
 			"`setadmin <role>` - Set the role to use as the admin role.\n" +
@@ -318,3 +319,23 @@ class Shuffle(commands.Cog):
 		message = await ctx.send("Pinging...")
 		ping = round((time.monotonic() - before) * 1000, 1)
 		await message.edit(content=":ping_pong: **Pong!**\nLatency: {}\nAPI Latency: {}".format(ping, round(self.bot.latency * 1000, 1)))
+
+	# Exec command
+	# VERY BUGGY
+	@commands.is_owner()
+	@commands.command()
+	async def exec(self, ctx, *, code):
+		before = time.monotonic()
+		try:
+			print("attemting as normal code")
+			eval(compile(code, "<string>", mode="exec"))
+		except SyntaxError:
+			try:
+				print("attempting as async code")
+				await eval(compile(code, "<string>", mode="exec", flags=ast.PyCF_ALLOW_TOP_LEVEL_AWAIT))
+			except:
+				await ctx.send("Error: {}".format(sys.exc_info[0]))
+		except:
+			await ctx.send("Error: {}".format(sys.exc_info[0]))
+				
+		exec_time = before - time.monotonic()
