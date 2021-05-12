@@ -204,7 +204,7 @@ class Shuffle(commands.Cog):
 	@commands.command()
 	async def setadmin(self, ctx, role:discord.Role):
 		self.setConfigValue(ctx.guild, "adminRole", str(role.id))
-		await ctx.send("The admin role is now {}. These settings will be applied next swap.".format(role.mention))
+		await ctx.send("The admin role is now {}. These settings will be applied next swap.".format(role.mention), allowed_mentions=discord.AllowedMentions.none())
 
 	# Set time between swaps
 	@isGuildOwner()
@@ -219,7 +219,7 @@ class Shuffle(commands.Cog):
 	async def ignoredroles(self, ctx):
 		config = self.getConfig(ctx.guild)
 		ignoreList = config["ignoreRoles"]
-		await ctx.send("Here are the ignore roles:\n{}\nThese roles will not be reset at the end of each swap and anyone with them cannot be chosen for admin.".format(", ".join(ctx.guild.get_role(int(role)).mention for role in ignoreList) or None))
+		await ctx.send("Here are the ignore roles:\n{}\nThese roles will not be reset at the end of each swap and anyone with them cannot be chosen for admin.".format(", ".join(ctx.guild.get_role(int(role)).mention for role in ignoreList) or None), allowed_mentions=discord.AllowedMentions.none())
 
 	# Add role to ignore list
 	@isGuildOwner()
@@ -230,7 +230,7 @@ class Shuffle(commands.Cog):
 			config["ignoreRoles"] = []
 		config["ignoreRoles"].append(str(role.id))
 		self.setConfigValue(ctx.guild, "ignoreRoles", config["ignoreRoles"])
-		await ctx.send("{} has been added to the ignore list. Ignored roles will not be reset at the end of each swap and anyone with them cannot be chosen for admin.".format(role.mention))
+		await ctx.send("{} has been added to the ignore list. Ignored roles will not be reset at the end of each swap and anyone with them cannot be chosen for admin.".format(role.mention), allowed_mentions=discord.AllowedMentions.none())
 
 	# Remove role from ignore list
 	@isGuildOwner()
@@ -239,7 +239,7 @@ class Shuffle(commands.Cog):
 		config = self.getConfig(ctx.guild)
 		config["ignoreRoles"].remove(str(role.id))
 		self.setConfigValue(ctx.guild, "ignoreRoles", config["ignoreRoles"])
-		await ctx.send("{} has been removed from the ignore list.".format(role.mention))
+		await ctx.send("{} has been removed from the ignore list.".format(role.mention), allowed_mentions=discord.AllowedMentions.none())
 
 	# Manualy set config value (string)
 	@isGuildOwner()
