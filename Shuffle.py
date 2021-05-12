@@ -21,11 +21,11 @@ class Shuffle(commands.Cog):
 	def __init__(self, bot, configFolder="./data"):
 		self.bot = bot
 		self._configFolder = configFolder
-		self._configs = {}
 		self._loadConfigs()
 
 	# Load all configs from file
 	def _loadConfigs(self):
+		self._configs = {}
 		try:
 			servers = os.listdir(self._configFolder)
 			for server in servers:
@@ -147,7 +147,7 @@ class Shuffle(commands.Cog):
 		# Update loaded configs
 		config = self.getConfig(server)
 		config[key] = value
-		self._configs[str(server)] = config
+		self._configs[str(server.id)] = config
 		# Update saved configs
 		with open("{}/{}.json".format(self._configFolder, str(server.id)), "w") as configFile:
 			json.dump(config, configFile, indent=4)
