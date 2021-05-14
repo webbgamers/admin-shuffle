@@ -219,7 +219,7 @@ class Shuffle(commands.Cog):
 	async def ignoredroles(self, ctx):
 		config = self.getConfig(ctx.guild)
 		ignoreList = config["ignoreRoles"]
-		await ctx.send("Here are the ignore roles:\n{}\nThese roles will not be reset at the end of each swap and anyone with them cannot be chosen for admin.".format(", ".join(ctx.guild.get_role(int(role)).mention for role in ignoreList) or None), allowed_mentions=discord.AllowedMentions.none())
+		await ctx.send("Here are the ignored roles:\n{}\nThese roles will not be reset at the end of each swap and anyone with them cannot be chosen for admin.".format(", ".join("<@&{}>".format(role) for role in ignoreList) or None), allowed_mentions=discord.AllowedMentions.none())
 
 	# Add role to ignore list
 	@isGuildOwner()
@@ -309,7 +309,7 @@ class Shuffle(commands.Cog):
 			"`settime <hours>` - Set the time between swaps.\n" +
 			"`ignore <role>` - Add a role to the list of ignored roles.\n" +
 			"`unignore <role>` - Remove a role from the list of ignored roles.\n" +
-			"`ignoredroles` - Get the list of ignored roles." +
+			"`ignoredroles` - Get the list of ignored roles.\n" +
 			"`swap` - Manually initiate a swap.", inline=False)
 		await ctx.send(embed=embed)
 
