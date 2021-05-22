@@ -72,7 +72,10 @@ class Shuffle(commands.Cog):
 		members = server.members
 		for member in members:
 			if adminRole in member.roles:
-				await member.send("You have less than one hour remaining of time as admin, time is ticking!")
+				try:
+					await member.send("You have less than one hour remaining of time as admin, time is ticking!")
+				except:
+					print("Failed to send message to {}.".format(member.id))
 		self.setConfigValue(server, "warned", True)
 
 	async def swapAdmins(self, server):
@@ -94,7 +97,10 @@ class Shuffle(commands.Cog):
 			# Remove admin from members and prevent someone from getting it twice in a row
 			if adminRole in member.roles:
 				await member.remove_roles(adminRole, reason="End of admin time.")
-				await member.send("Unfortunately your time as admin has ended. Your can't get admin twice in a row but after that you are fair game so be ready!")
+				try:
+					await member.send("Unfortunately your time as admin has ended. Your can't get admin twice in a row but after that you are fair game so be ready!")
+				except:
+					print("Failed to send message to {}.".format(member.id))
 				continue
 			potentialAdmins.append(member)
 		adminCount = self.getAdminCount(server)
@@ -103,7 +109,10 @@ class Shuffle(commands.Cog):
 		for newAdmin in newAdmins:
 			await newAdmin.add_roles(adminRole, reason="Admin swap choice!")
 			config = self.getConfig(server)
-			await newAdmin.send("You were randomly selected to be the next admin! You have {} hours, make it count!".format(config["swapTime"]))
+			try:
+				await newAdmin.send("You were randomly selected to be the next admin! You have {} hours, make it count!".format(config["swapTime"]))
+			except:
+					print("Failed to send message to {}.".format(newAdmin.id))
 		# Reset swap time
 		nextSwap = time.time() + (int(config["swapTime"])*3600)
 		self.setConfigValue(server, "nextSwap", nextSwap)
