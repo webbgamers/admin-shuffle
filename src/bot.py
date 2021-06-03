@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from Shuffle import Shuffle
+from shuffle import Shuffle
 
 print("Connecting...")
 

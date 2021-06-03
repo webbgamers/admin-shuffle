@@ -164,7 +164,7 @@ class Shuffle(commands.Cog):
 
 	# Create config from default settings
 	def initConfig(self, server):
-		with open("./default_config.json") as defaultFile:
+		with open("./src/default_config.json") as defaultFile:
 			default = json.load(defaultFile)
 			id = str(server.id)
 			default["id"] = id
