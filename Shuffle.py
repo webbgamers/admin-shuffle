@@ -44,6 +44,7 @@ class Shuffle(commands.Cog):
 			return config
 
 	async def _updateLoop(self):
+		print("Starting update loop.")
 		while True:
 			try:
 				# Extract all configs for enabled servers
@@ -172,9 +173,10 @@ class Shuffle(commands.Cog):
 				json.dump(default, configFile, indent=4)
 			return default
 	
-	# Start update loop on bot connection
+	# Start update loop on initial bot connection
 	@commands.Cog.listener()
 	async def on_ready(self):
+		self.bot.remove_listener(self.on_ready)
 		await self._updateLoop()
 
 	# Config commands
