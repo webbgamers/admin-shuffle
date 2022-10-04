@@ -1,8 +1,8 @@
 # Admin Shuffle
 This is a Discord bot that will periodically rotate who is admin. After a configurable amount of time, the bot will reset permissions on all roles, remove existing admins, and add new ones.
 
-## Official Server
-There is a server that this bot runs on [here](https://discord.gg/mYgh94r3pm). This invite link may break if someone gets admin and deletes it, theres not much I can do about that.
+## ~~Official Server~~
+~~There is a server that this bot runs on [here](https://discord.gg/mYgh94r3pm). This invite link may break if someone gets admin and deletes it, theres not much I can do about that.~~ The experiment has ended and the invite link no longer works. Thanks to those who tested things out!
 
 ## Official Hosted Bot
 For whatever reason if you want to run your own experiment you can invite the [official hosted bot](https://discord.com/oauth2/authorize?client_id=839562104696602644&scope=bot&permissions=8589934579). Once you have invited it, see the [setup instructions](#bot-setup) for how to get it running.
